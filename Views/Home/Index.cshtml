@@ -1,8 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Escooter.Models.Product>
+
+@{
+    var featuredProduct = ViewBag.FeaturedProduct as SimpleEcommerce.Models.Product;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Featured Product -->
+<div class="jumbotron text-center bg-light py-5">
+    <h1 class="display-4">Featured Product</h1>
+    <img src="@featuredProduct.ImageUrl" alt="@featuredProduct.Name" class="img-fluid" style="max-height: 300px;" />
+    <h3>@featuredProduct.Name</h3>
+    <p>@featuredProduct.Description</p>
+    <p class="lead">$@featuredProduct.Price</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Products" asp-action="Index">Shop Now</a>
+</div>
+
+<!-- Banner -->
+<div class="alert alert-info text-center">
+    <h4>Special Offer: Free Shipping on Orders Over $50!</h4>
+</div>
+
+<!-- Product List -->
+<div class="row">
+    <h2 class="text-center my-4">Our Products</h2>
+    @foreach (var product in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Description</p>
+                    <p class="card-text fw-bold">$@product.Price</p>
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <input type="number" name="quantity" value="1" min="1" max="@product.Stock" class="form-control d-inline w-25" />
+                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
 </div>
